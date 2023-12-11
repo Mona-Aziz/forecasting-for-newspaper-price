@@ -1,0 +1,170 @@
+import random
+import matplotlib as matplotlib
+import matplotlib.pyplot as plt
+
+def mrandom(): # function to generate a random numbers
+   r=random.randint(0,100)
+   result=r/100
+   return result
+def type(d):  #function to return the type of the newspaper
+    if (d <= 0.18):
+        x = "exce"
+    elif (d > 0.18 and d <= 0.60):
+        x = "good"
+    elif (d > 0.60 and d <= 0.92):
+        x = "fair"
+    else:
+        x="poor"
+    return x
+def val1(d) :  #function which return the demand if the news is excellent
+    if (d <= 0.07):
+        x = 50
+    elif ( d>0.07 and d <= 0.15):
+        x = 60
+    elif ( d>0.15 and d <= 0.27):
+        x = 70
+    elif ( d>0.27 and d <= 0.40):
+        x = 80
+    elif (d > 0.40 and d <= 0.62):
+        x = 90
+    elif (d > 0.62 and d <= 0.85):
+        x = 100
+    elif (d > 0.85 and d <= 0.93):
+        x = 110
+    else:
+        x = 120
+
+    return x
+def val2(d) :  #function which return the demand if the news is good
+    if (d <= 0.06):
+        x = 40
+    elif ( d>0.06 and d <= 0.15):
+        x = 50
+    elif ( d>0.15 and d <= 0.31):
+        x = 60
+    elif ( d>0.31 and d <= 0.50):
+        x = 70
+    elif (d > 0.50 and d <= 0.78):
+        x = 80
+    elif (d > 0.78 and d <= 0.90):
+        x = 90
+    elif (d > 0.90 and d <= 0.97):
+        x = 100
+    else:
+        x = 110
+
+    return x
+def val3(d) :    #function which return the demand if the news is fair
+    if (d <= 0.15):
+        x = 40
+    elif ( d>0.15 and d <= 0.37):
+        x = 50
+    elif ( d>0.37 and d <= 0.65):
+        x = 60
+    elif ( d>0.65 and d <= 0.83):
+        x = 70
+    elif (d > 0.83 and d <= 0.93):
+        x = 80
+    elif (d > 0.93 and d <= 0.98):
+        x = 90
+    else:
+        x = 100
+
+    return x
+
+def val4(d) :    #function which return the demand if the news is poor
+    if (d <= 0.42):
+        x = 40
+    elif ( d>0.42 and d <= 0.70):
+        x = 50
+    elif ( d>0.70 and d <= 0.84):
+        x = 60
+    elif ( d>0.84 and d <= 0.94):
+        x = 70
+    elif (d > 0.94 and d <= 0.99):
+        x = 80
+    else:
+        x = 90
+
+    return x
+num=0
+maximum=0.0
+lst=[]
+lst2=[]
+totalprof=[]
+totalbund=[]
+totaldem=[]
+c=0
+def printtable(d,t,rn,rn2,r,c,l,s,pd,bnd):
+    print(d,'       ',t,'           ',rn,'               ',rn2,'         ',r,'    ',c,' ',l,'      ',s,'                      ',pd,'               ',bnd)
+
+
+for j in range(1,26,1):  #for loop to get the number of bundels that achieve the most profit repeated in 25 round
+    print('demand', ' ','type of nws', ' ','rand num of demand ',' ','rand num of type', ' ','revenue', ' ','cost', ' ','lost', '     ','salvage', '                ', 'profit per day','   ','bnudles')
+    for i in range(20,501,20):
+        randm1=mrandom()
+        randm2=mrandom()
+        t=type(randm1) # random number to get the new's type
+        if(t== "exce"):
+            v=val1(randm2) #get random number to know the demand in excellent news
+        elif(t=="good"):
+            v=val2(randm2) #get random number to know the demand in good news
+        elif(t=="fair"):
+            v = val3(randm2) #get random number to know the demand in fair news
+        else:
+            v = val4(randm2)  #get random number to know the demand in poor news
+        revenue=v*0.7# calculate the revenue by multply the bundle and 70 cents
+
+        cost=i*0.5 # calculate the cost by multply the bundle and 50 cents
+        lost=(v-i)*0.2 # calculate the lost by multply the remaining demand and 20 cents
+        remain=i-v # calculate the remaining bundle
+        salvage=remain*0.15 # calculate the salvage by multply the remaining bundle and 15 cents
+        if(lost>0):
+           profit=(revenue-cost-lost+salvage) # calculate the profit
+        else:
+           profit = (revenue - cost +lost + salvage)  # calculate the profit
+        printtable(v,t,randm2,randm1,revenue,cost,lost,salvage,profit,i)
+        totalprof.append(profit)
+        totalbund.append(i)
+        totaldem.append(v)
+        #print(profit)
+        if(profit> maximum):
+            maximum=profit
+            num=i
+    if (num not in lst):
+        lst.append(num)
+        lst2.append(1)
+    else:
+        c=lst.index(num)
+        lst2[c]+=1
+    print('-------------------------------------------------------------------------------------------------------------')
+plt.plot(totalbund[:25], totalprof[:25])
+
+    # naming the x axis
+plt.xlabel('bundle')
+    # naming the y axis
+plt.ylabel('profit')
+    # function to show the plot
+plt.show()
+maxi=0
+index=0
+l=len(lst2)
+for i in range(0,l):
+    if(lst2[i]>maxi):
+       maxi=lst2[i]
+       index=i
+#plt.hist(totaldem, bins=25, alpha=0.45, color='red')
+#plt.hist(totalbund, bins=25, alpha=0.45, color='black')
+plt.hist(totalprof, bins=50, alpha=0.45, color='blue')
+
+plt.title("histogram for 25 days ")
+
+plt.legend(['demand','bundle','profit'])
+
+plt.show()
+print("The most numbers repeated in the in 25 day")
+print(lst)
+print("The frequency of the repeated numbers")
+print(lst2)
+print("The optimal number of papers the seller should purchase is : ")
+print(lst[index])
